@@ -16,11 +16,33 @@
                     <h2 class="text-2xl">
                         {{ $ticket->title }}
                     </h2>
-                    <a href="{{ '/ticket/'.$ticket->id.'/edit' }}">
-                        <svg class="w-10 h-10 p-2 text-gray-400 rounded-lg hover:text-gray-600 hover:bg-indigo-50" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                        </svg>
-                    </a>
+
+                    <div>
+                        <a class="mb-2" href="{{ '/ticket/'.$ticket->id.'/edit' }}">
+                            <svg class="w-10 h-10 p-2 text-gray-400 rounded-lg hover:text-gray-600 hover:bg-indigo-50" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                            </svg>
+                        </a>
+
+                        @if ( $ticket->status != 'completed' )
+                            <form class="mt-2" wire:submit.prevent="stopClock" method="post">
+                                <button type="submit" title="{{ __('Close ticket') }}">
+                                    <svg class="w-10 h-10 p-2 text-green-400 rounded-lg hover:text-green-600 hover:bg-green-50" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </button>
+                            </form>
+
+                        @else
+                            <form class="mt-2" wire:submit.prevent="reopen" method="post">
+                                <button type="submit" title="{{ __('Reopen ticket') }}">
+                                    <svg class="w-10 h-10 p-2 text-red-400 rounded-lg hover:text-red-600 hover:bg-red-50" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                    </svg>
+                                </button>
+                            </form>
+                        @endif
+                    </div>
                 </div>
 
                 <div class="flex items-center justify-between">
@@ -92,6 +114,7 @@
                             @endswitch
                         </div>
 
+                        {{-- Right Side --}}
                         <div class="flex items-center my-6">
                             <svg class="w-4 h-4 text-indigo-600 dark:text-indigo-400 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -111,28 +134,8 @@
                                     {{ $ticket->total_hours ?? 0 }}
                                 </p>
                                 <small>
-                                    {{ __('Hours worked') }}
+                                    {{ __('Logged hours') }}
                                 </small>
-                            </div>
-
-                            <div class="flex justify-center">
-                                @if ($ticket->status != 'completed')
-                                    @if ($ticket->status == 'open')
-                                        <form wire:submit.prevent="startClock" method="post">
-                                            <button type="submit" class="px-2 text-green-800 bg-green-50 my-2 border border-green-200 hover:bg-green-100 rounded-lg">
-                                                {{ __('Begin') }}
-                                            </button>
-                                        </form>
-
-                                    @else
-
-                                    <form wire:submit.prevent="stopClock" method="post">
-                                        <button type="submit" class="px-2 text-red-800 bg-red-50 my-2 border border-red-200 hover:bg-red-100 rounded-lg">
-                                            {{ __('Finish') }}
-                                        </button>
-                                    </form>
-                                    @endif
-                                @endif
                             </div>
                         </div>
                     </div>
@@ -162,7 +165,7 @@
                         <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                         </svg>
-                        Work started on: {{ $ticket->start }}
+                        Ticket opened on: {{ $ticket->created_at }}
                     </div>
                 @endif
 
@@ -171,7 +174,7 @@
                         <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                         </svg>
-                        Work finished on: {{ $ticket->end }}
+                        Ticket closed on: {{ $ticket->end }}
                     </div>
                 @endif
 

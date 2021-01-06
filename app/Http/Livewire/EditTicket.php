@@ -15,6 +15,7 @@ class EditTicket extends Component
     public $priority;
     public $notes;
     public $total_hours;
+    public $current_total_hours;
 
     public $successMessage;
 
@@ -25,19 +26,27 @@ class EditTicket extends Component
             'mode' => $this->mode,
             'priority' => $this->priority,
             'notes' => $this->notes,
-            'total_hours' => $this->total_hours,
         ]);
 
-        if ($this->total_hours > 0) {
-            $this->ticket->update(['status' => 'completed']);
-
-            if ( unserialize( $this->ticket->notify ) > 0 ) {
-                Mail::to( unserialize( $this->ticket->notify ) )
-                ->send( new NotifyClosedTicket($this->ticket, config('app.url')) );
-            }
+        if ( $this->total_hours ) {
+            $this->ticket->update([
+                'total_hours' => $this->total_hours,
+            ]);
         }
 
         $this->successMessage = "Ticket successfully updated!";
+    }
+
+    public function closeTicket()
+    {
+        $this->ticket->update([
+            'status' => 'completed',
+        ]);
+
+        if (unserialize( $this->ticket->notify ) > 0 ) {
+            Mail::to( unserialize( $this->ticket->notify ) )
+            ->send( new NotifyClosedTicket($this->ticket, config('app.url')) );
+        }
     }
 
     public function render()
@@ -45,6 +54,7 @@ class EditTicket extends Component
         $this->status   = $this->ticket->status;
         $this->mode = $this->ticket->mode;
         $this->priority = $this->ticket->priority;
+        $this->current_total_hours = $this->ticket->total_hours;
         $this->notes    = $this->ticket->notes;
 
         return view('livewire.edit-ticket');

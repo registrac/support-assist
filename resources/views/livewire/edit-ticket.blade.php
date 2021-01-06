@@ -19,7 +19,7 @@
                         <select wire:model.defer="status" name="status" id="status">
                             <option value="open" @if($status == 'open') selected @endif>{{__('Open')}}</option>
                             <option value="in_progress" @if($status == 'in_progress') selected @endif>{{__('In progress')}}</option>
-                            <option value="completed" @if($status == 'completed') selected @endif>{{__('Completed')}}</option>
+                            {{-- <option value="completed" @if($status == 'completed') selected @endif>{{__('Completed')}}</option> --}}
                         </select>
                     </div>
 
@@ -43,6 +43,7 @@
                     <div class="my-6">
                         <label for="priority" class="block font-medium text-sm text-gray-700 dark:text-gray-200">{{ __('Hours spent on this ticket') }}</label>
                         <input wire:model.defer="total_hours" type="text" name="total_hours">
+                        <small class="text-xs text-gray-600">{{ __('Current: ') . $current_total_hours }}</small>
                     </div>
                 </div>
 

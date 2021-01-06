@@ -18,30 +18,10 @@ class ManageTicketClock extends Component
     public $total_hours;
     public $successMessage;
 
-    public function startClock ()
-    {
-        $this->ticket->update([
-            'start' => Carbon::now(),
-            'status' => 'in_progress',
-            'end' => null,
-        ]);
-
-        /**
-         * Send ticket notification to customer
-         */
-        if ( unserialize( $this->ticket->notify ) > 0 ) {
-            Mail::to( unserialize( $this->ticket->notify ) )
-            ->send( new NotifyTicketInProgress($this->ticket, config('app.url')) );
-        }
-
-        $this->successMessage = "Clock started at " . Carbon::now();
-    }
-
     public function stopClock ()
     {
         $this->ticket->update([
             'end' => Carbon::now(),
-            'total_hours' => round( abs( strtotime( Carbon::now() ) - strtotime( $this->ticket->start ) ) / (60*60), 1 ),
             'status' => 'completed'
         ]);
 
@@ -53,7 +33,18 @@ class ManageTicketClock extends Component
             ->send( new NotifyClosedTicket($this->ticket, config('app.url')) );
         }
 
-        $this->successMessage = "Clock ended at " . Carbon::now();
+        $this->successMessage = "Ticket successfully closed at " . Carbon::now();
+    }
+
+    public function reopen ()
+    {
+
+        $this->ticket->update([
+            'status' => 'open',
+        ]);
+
+        $this->successMessage = "Ticket has been reopened at " . Carbon::now();
+
     }
 
     public function render()
