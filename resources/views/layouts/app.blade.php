@@ -21,7 +21,7 @@
     </head>
     <body class="font-sans antialiased bg-gray-100 dark:bg-gray-800">
         <div class="min-h-screen">
-            @livewire('navigation-dropdown')
+            @livewire('navigation-menu')
 
             <!-- Page Heading -->
             <header class="bg-white dark:bg-gray-900 shadow">

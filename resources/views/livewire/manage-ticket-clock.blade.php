@@ -95,10 +95,10 @@
                                     </span>
                                     @break
                                 @case('in_progress')
-                                    <svg class="w-4 h-4 text-orange-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <svg class="w-4 h-4 text-yellow-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
-                                    <span class="text-sm align-middle capitalize text-orange-500">
+                                    <span class="text-sm align-middle capitalize text-yellow-500">
                                         {{ $ticket->status }}
                                     </span>
                                     @break
@@ -114,15 +114,16 @@
                             @endswitch
                         </div>
 
-                        {{-- Right Side --}}
-                        <div class="flex items-center my-6">
-                            <svg class="w-4 h-4 text-indigo-600 dark:text-indigo-400 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            <span class="text-sm align-middle capitalize text-indigo-600 dark:text-indigo-400">
-                                <a href="{{ $ticket->id.'/view-attachment' }}" target="_blank">{{ __('View attachment') }}</a>
-                            </span>
-                        </div>
+                        @if ( $ticket->attachment )
+                            <div class="flex items-center my-6">
+                                <svg class="w-4 h-4 text-indigo-600 dark:text-indigo-400 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <span class="text-sm align-middle capitalize text-indigo-600 dark:text-indigo-400">
+                                    <a href="{{ $ticket->id.'/view-attachment' }}" target="_blank">{{ __('View attachment') }}</a>
+                                </span>
+                            </div>
+                        @endif
 
                     </div>
 
@@ -149,52 +150,23 @@
         </div>
 
 
-        @if ($ticket->start)
-        <div class="bg-white dark:bg-gray-900 dark:text-gray-200 overflow-hidden shadow-sm sm:rounded-lg p-6 mb-6">
-            <h3 class="text-xl flex">
-                <svg class="w-6 h-6 text-gray-600 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                </svg>
-                {{ __('Worklog') }}
-            </h3>
+        @if ($ticket->notes)
+            <div class="bg-white dark:bg-gray-900 overflow-hidden shadow-sm sm:rounded-lg p-6 mb-6">
+                <h3 class="text-xl flex dark:text-gray-200">
+                    <svg class="w-6 h-6 text-gray-600 dark:text-gray-400 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                    {{ __('Notes') }}
+                </h3>
 
-            <div class="bg-gray-900 dark:bg-black text-gray-200 my-6 p-6 rounded-xl">
-
-                @if ($ticket->start)
-                    <div class="text-green-400 flex items-center my-2">
-                        <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
-                        Ticket opened on: {{ $ticket->created_at }}
-                    </div>
-                @endif
-
-                @if ($ticket->end)
-                    <div class="text-green-400 flex items-center my-2">
-                        <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
-                        Ticket closed on: {{ $ticket->end }}
-                    </div>
-                @endif
-
-                @if ($ticket->notes)
+                <div class="bg-gray-900 dark:bg-black text-gray-200 my-6 p-6 rounded-lg">
                     <div class="text-green-400 my-2">
-                        <div class="flex items-center">
-                            <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
-                            Notes:
-                        </div>
                         <div class="mx-6">
                             {!! nl2br($ticket->notes) !!}
                         </div>
                     </div>
-                @endif
-
+                </div>
             </div>
-
-        </div>
         @endif
 
 

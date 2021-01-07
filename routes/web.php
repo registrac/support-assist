@@ -135,11 +135,12 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
              */
             Route::get('/ticket/{ticket}/edit', [App\Http\Controllers\TicketController::class, 'edit']);
 
-            /**
-             * Grab Ticket Attachment
-             */
-            Route::get('ticket/{ticket}/view-attachment', [App\Http\Controllers\FileController::class, 'grab_attachment']);
         });
+
+        /**
+         * Grab Ticket Attachment
+         */
+        Route::get('ticket/{ticket}/view-attachment', [App\Http\Controllers\FileController::class, 'grab_attachment']);
 
     });
 

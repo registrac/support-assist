@@ -2,9 +2,11 @@
 
 namespace App\Http\Livewire;
 
+use App\Mail\ITNotifyNewTicket;
 use App\Mail\NotifyNewTicket;
 use App\Models\Company;
 use App\Models\Ticket;
+use App\Models\User;
 use Illuminate\Support\Carbon;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -32,7 +34,6 @@ class CreateTicket extends Component
 
     public function createTicket ()
     {
-        // dd($this->notify);
 
         if ( ! auth()->user()->isAdmin() ) {
             $this->name = auth()->user()->companies[0]['name'];
@@ -71,12 +72,18 @@ class CreateTicket extends Component
         $ticket->company()->attach(Company::where('name', $this->name)->get());
 
         /**
-         * Send ticket notification to IT
+         * Send ticket notification to owner
          */
         if ( $this->notify > 0 ) {
             # code...
             Mail::to( $this->notify )->send(new NotifyNewTicket($ticket, config('app.url')));
         }
+
+        /**
+         * Send notification to IT
+         */
+        Mail::to( User::where('role', 'admin')->pluck('email')->toArray() )
+            ->send( new ITNotifyNewTicket( $ticket, config('app.url') ) );
 
         session()->flash('success_message', 'Ticket successfully created!');
         return redirect()->to('/tickets');

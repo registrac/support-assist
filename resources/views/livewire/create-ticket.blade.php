@@ -148,23 +148,25 @@
                             </div>
                         </div>
 
-                        <div>
-                            <label for="notify" class="block text-sm font-medium text-gray-700">
-                                {{ __('Notify via email:') }}
-                            </label>
-                            <select name="notify[]" wire:model="notify" multiple class="mt-1">
-                                {{--  --}}
-                                @if ($emails)
-                                    @forelse ($emails as $email)
-                                        <option value="{{ $email->email }}">{{ $email->email }}</option>
-                                    @empty
-                                        <option disabled>{{ __('There are currently no users registered for this customer.') }}</option>
-                                    @endforelse
-                                @else
-                                    <option disabled>{{ __('Please select a customer for notification options.') }}</option>
-                                @endif
-                            </select>
-                        </div>
+                        @if ( auth()->user()->isAdmin() )
+                            <div>
+                                <label for="notify" class="block text-sm font-medium text-gray-700">
+                                    {{ __('Notify via email:') }}
+                                </label>
+                                <select name="notify[]" wire:model="notify" multiple class="mt-1">
+                                    {{--  --}}
+                                    @if ($emails)
+                                        @forelse ($emails as $email)
+                                            <option value="{{ $email->email }}">{{ $email->email }}</option>
+                                        @empty
+                                            <option disabled>{{ __('There are currently no users registered for this customer.') }}</option>
+                                        @endforelse
+                                    @else
+                                        <option disabled>{{ __('Please select a customer for notification options.') }}</option>
+                                    @endif
+                                </select>
+                            </div>
+                        @endif
 
                         <div class="flex justify-end">
                             <x-jet-button class="disabled:bg-gray-50">

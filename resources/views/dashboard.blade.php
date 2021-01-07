@@ -14,9 +14,6 @@
             @else
                 @livewire( 'dashboard' )
             @endif
-
-
-
         </div>
     </div>
 </x-app-layout>
